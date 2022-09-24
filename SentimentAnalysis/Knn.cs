@@ -4,8 +4,16 @@ namespace SentimentAnalysis
 {
     public class Knn
     {
+        /// <summary>
+        /// 거리 공식을 계산하기 위한 최대 빈도수 캐시입니다.
+        /// </summary>
         private readonly Dictionary<string, int> maxFrequencyCache = new();
+
+        /// <summary>
+        /// 거리 공식을 계산하기 위한 최소 빈도수 캐시입니다.
+        /// </summary>
         private readonly Dictionary<string, int> minFrequencyCache = new();
+
         private readonly List<Comment> trainData;
 
         /// <summary>

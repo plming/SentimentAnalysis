@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -21,8 +22,8 @@ namespace SentimentAnalysis
         /// label은 P 또는 N이여야만 합니다.
         /// </summary>
         /// <param name="path">csv 파일의 경로</param>
-        /// <returns></returns>
-        public static List<Comment> LoadCommentsFromFile(string path)
+        /// <returns>파일에서 불러온 댓글 목록</returns>
+        public static List<Comment> LoadCommentsFromCsvFile(string path)
         {
             CsvConfiguration config = new(CultureInfo.InvariantCulture)
             {
@@ -61,6 +62,25 @@ namespace SentimentAnalysis
             }
 
             return comments;
+        }
+
+        /// <summary>
+        /// csv 파일로부터 단어 집합을 불러옵니다. 컬럼은 word 1개만 있어야 합니다.
+        /// </summary>
+        /// <param name="path">csv 파일의 경로</param>
+        /// <returns>파일에서 불러온 단어 집합</returns>
+        public static HashSet<string> LoadWordsFromCsvFile(string path)
+        {
+            HashSet<string> words = new();
+
+            foreach(string line in File.ReadLines(path))
+            {
+                string word = line.Trim();
+                Debug.Assert(!words.Contains(word), "파일에 중복된 단어가 존재합니다.");
+                words.Add(word);
+            }
+
+            return words;
         }
     }
 }
