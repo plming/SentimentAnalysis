@@ -5,8 +5,8 @@ namespace SentimentAnalysis
     public static class Tokenizer
     {
         private static readonly HashSet<string> noun = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "noun.csv"));
-        private static readonly HashSet<string> postPosition = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "postPosition.csv"));
-        private static readonly HashSet<string> verb = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "joyolist.csv"));
+        private static readonly HashSet<string> postPosition = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "post_position.csv"));
+        private static readonly HashSet<string> ending = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "ending.csv"));
 
         public static List<string> ExtractNouns(string word)
         {
@@ -23,7 +23,7 @@ namespace SentimentAnalysis
                 string front = word[..i];
                 string rear = word[i..];
 
-                if (noun.Contains(front) && verb.Contains(rear))
+                if (noun.Contains(front) && ending.Contains(rear))
                 {
                     return new() { front };
                 }
