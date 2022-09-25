@@ -72,12 +72,12 @@ namespace SentimentAnalysis
                 double sumTerms = 0;
                 foreach (string word in maxFrequencyCache.Keys)
                 {
-                    double dividend = x.GetFrequency(word) - comment.GetFrequency(word);
+                    int dividend = x.GetFrequency(word) - comment.GetFrequency(word);
 
                     int divisor = maxFrequencyCache[word] - minFrequencyCache[word];
                     divisor = divisor == 0 ? 1 : divisor;
 
-                    sumTerms += Math.Pow(dividend / divisor, 2);
+                    sumTerms += Math.Pow((double)dividend / divisor, 2);
                 }
 
                 double distance = Math.Sqrt(sumTerms);
