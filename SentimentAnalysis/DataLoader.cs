@@ -72,12 +72,14 @@ namespace SentimentAnalysis
         public static HashSet<string> LoadWordsFromCsvFile(string path)
         {
             HashSet<string> words = new();
-
+           
             foreach(string line in File.ReadLines(path))
             {
-                string word = line.Trim();
-                Debug.Assert(!words.Contains(word), "파일에 중복된 단어가 존재합니다.");
-                words.Add(word);
+                const string BLANK = " ";
+                Debug.Assert(line.Split(BLANK).Length == 1, "한 줄에 여러 단어가 존재합니다.");
+                Debug.Assert(!words.Contains(line), "파일에 중복된 단어가 존재합니다.");
+
+                words.Add(line);
             }
 
             return words;
