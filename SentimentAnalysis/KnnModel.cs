@@ -2,7 +2,7 @@
 
 namespace SentimentAnalysis
 {
-    public class Knn
+    public class KnnModel : Model
     {
         /// <summary>
         /// 거리 공식을 계산하기 위한 최대 빈도수 캐시입니다.
@@ -20,7 +20,7 @@ namespace SentimentAnalysis
         /// K-NN 모델을 생성합니다. comments는 모델의 훈련에 쓰이며, 댓글의 label은 긍정 또는 부정이어야만 합니다.
         /// </summary>
         /// <param name="comments"></param>
-        public Knn(List<Comment> comments)
+        public KnnModel(List<Comment> comments)
         {
             trainData = new(comments);
 
@@ -62,7 +62,7 @@ namespace SentimentAnalysis
         /// </summary>
         /// <param name="x">레이블을 예측할 댓글</param>
         /// <returns>x가 긍정적인 댓글일 경우 Label.POSITIVE, 부정적인 댓글일 경우 Label.NEGATIVE를 반환합니다.</returns>
-        public Label Predict(Comment x)
+        public override Label Predict(Comment x)
         {
             PriorityQueue<Comment, double> distancePriorityQueue = new(trainData.Count);
 
