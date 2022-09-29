@@ -1,6 +1,5 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -72,8 +71,8 @@ namespace SentimentAnalysis
         public static HashSet<string> LoadWordsFromCsvFile(string path)
         {
             HashSet<string> words = new();
-           
-            foreach(string line in File.ReadLines(path))
+
+            foreach (string line in File.ReadLines(path))
             {
                 const string BLANK = " ";
                 Debug.Assert(line.Split(BLANK).Length == 1, "한 줄에 여러 단어가 존재합니다.");
@@ -83,6 +82,36 @@ namespace SentimentAnalysis
             }
 
             return words;
+        }
+
+        /// <summary>
+        /// csv 파일로부터 극성 점수 사전을 불러옵니다.
+        /// </summary>
+        /// <param name="path">csv 파일의 경로</param>
+        /// <returns>단어를 key, 1이상 5이하의 점수를 value로 가지는 사전</returns>
+        public static Dictionary<string, int> LoadPolarityScoresFromCsvFile(string path)
+        {
+            Dictionary<string, int> polarityScores = new Dictionary<string, int>();
+
+            foreach (string line in File.ReadLines(path))
+            {
+                string[] splits = line.Split(',');
+                Debug.Assert(splits.Length == 2, "컬럼 갯수가 맞지 않습니다.");
+
+                string word = splits[0].Trim();
+                Debug.Assert(word == splits[0], "단어에 공백이 포함되어 있습니다");
+
+                bool isInteger = int.TryParse(splits[1], out int score);
+                Debug.Assert(isInteger);
+
+                const int BEST_SCORE = 5;
+                const int WORST_SCORE = 1;
+                Debug.Assert(score >= WORST_SCORE && score <= BEST_SCORE, "유효한 점수 범위를 벗어납니다.");
+
+                polarityScores.Add(word, score);
+            }
+
+            return polarityScores;
         }
     }
 }

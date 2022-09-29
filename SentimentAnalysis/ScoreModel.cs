@@ -2,11 +2,11 @@
 {
     public class ScoreModel : Model
     {
-        private readonly Dictionary<string, int> polarityScores = new();
+        private readonly Dictionary<string, int> polarityScores;
 
         public ScoreModel()
         {
-            
+            polarityScores = DataLoader.LoadPolarityScoresFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "polarity_scores.csv"));
         }
 
         public override Label Predict(Comment x)
