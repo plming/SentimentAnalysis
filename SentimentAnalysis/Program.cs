@@ -8,11 +8,13 @@ namespace SentimentAnalysis
         {
             Random random = new Random();
             Stopwatch stopwatch = new();
+
             stopwatch.Start();
 
-            List<Comment> comments = DataLoader.LoadCommentsFromCsvFile(@"");
-     
-            comments = comments.OrderBy(_ => random.Next()).ToList();
+            List<Comment> comments = DataLoader.LoadCommentsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "comments.csv"))
+                                               .OrderBy(_ => random.Next())
+                                               .ToList();
+
             Console.WriteLine("댓글 데이터를 섞었습니다");
 
             var positiveComments = comments.Where(c => c.Label == Label.POSITIVE);
