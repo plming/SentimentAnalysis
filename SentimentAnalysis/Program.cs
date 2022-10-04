@@ -11,17 +11,14 @@ namespace SentimentAnalysis
 
             CommentRepository repository = new(Path.Combine(DataLoader.DATA_DIR_PATH, "comments.csv"));
 
-            repository.TrySplit(ratio: 0.7,
-                                out List<Comment> trainDataSet,
-                                out List<Comment> testDataSet);
+            repository.Split(ratio: 0.7, out var trainDataSet, out var testDataSet);
 
             Model[] models = { new KnnModel(trainDataSet), new ScoreModel() };
-
             foreach (Model model in models)
             {
                 int numMatched = 0;
 
-                foreach(Comment comment in testDataSet)
+                foreach (Comment comment in testDataSet)
                 {
                     Label predict = model.Predict(comment);
 
@@ -35,8 +32,8 @@ namespace SentimentAnalysis
             }
 
             stopwatch.Stop();
-            Console.WriteLine($"긍정 갯수: {repository.Count(Label.POSITIVE)}");
-            Console.WriteLine($"부정 갯수: {repository.Count(Label.NEAGTIVE)}");
+            Console.WriteLine($"긍정 갯수: {repository.CountByLabel(Label.POSITIVE)}");
+            Console.WriteLine($"부정 갯수: {repository.CountByLabel(Label.NEAGTIVE)}");
 
             Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
         }

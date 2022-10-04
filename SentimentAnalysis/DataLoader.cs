@@ -5,23 +5,10 @@ using System.Globalization;
 
 namespace SentimentAnalysis
 {
-    /// <summary>
-    /// 파일로부터 데이터셋을 불러옵니다.
-    /// </summary>
     public static class DataLoader
     {
-        /// <summary>
-        /// DataLoader 클래스가 읽을 파일이 위치하는 디렉토리 경로
-        /// </summary>
         public static string DATA_DIR_PATH { get; } = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "data");
 
-        /// <summary>
-        /// csv 파일로부터 댓글을 불러옵니다.
-        /// 컬럼은 label, text 순서로 있어야 합니다.
-        /// label은 P 또는 N이여야만 합니다.
-        /// </summary>
-        /// <param name="path">csv 파일의 경로</param>
-        /// <returns>파일에서 불러온 댓글 목록</returns>
         public static List<Comment> LoadCommentsFromCsvFile(string path)
         {
             CsvConfiguration config = new(CultureInfo.InvariantCulture)
@@ -63,11 +50,6 @@ namespace SentimentAnalysis
             return comments;
         }
 
-        /// <summary>
-        /// csv 파일로부터 단어 집합을 불러옵니다. 컬럼은 word 1개만 있어야 합니다.
-        /// </summary>
-        /// <param name="path">csv 파일의 경로</param>
-        /// <returns>파일에서 불러온 단어 집합</returns>
         public static HashSet<string> LoadWordsFromCsvFile(string path)
         {
             HashSet<string> words = new();
@@ -84,14 +66,9 @@ namespace SentimentAnalysis
             return words;
         }
 
-        /// <summary>
-        /// csv 파일로부터 극성 점수 사전을 불러옵니다.
-        /// </summary>
-        /// <param name="path">csv 파일의 경로</param>
-        /// <returns>단어를 key, 1이상 5이하의 점수를 value로 가지는 사전</returns>
         public static Dictionary<string, int> LoadPolarityScoresFromCsvFile(string path)
         {
-            Dictionary<string, int> polarityScores = new Dictionary<string, int>();
+            Dictionary<string, int> polarityScores = new();
 
             foreach (string line in File.ReadLines(path))
             {

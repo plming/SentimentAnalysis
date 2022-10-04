@@ -1,11 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace SentimentAnalysis
 {
     public class CommentRepository
     {
-        private List<Comment> comments;
+        private readonly List<Comment> comments;
 
         public CommentRepository(string path)
         {
@@ -18,10 +17,12 @@ namespace SentimentAnalysis
 
         }
 
-        public bool TrySplit(double ratio, out List<Comment> trainData, out List<Comment> testData)
+        public void Split(double ratio, out List<Comment> trainData, out List<Comment> testData)
         {
-            trainData = new();
-            testData = new();
+            Debug.Assert(ratio >= 0 && ratio <= 1);
+
+            trainData = new List<Comment>();
+            testData = new List<Comment>();
 
             for (int i = 0; i < comments.Count; i++)
             {
@@ -36,11 +37,9 @@ namespace SentimentAnalysis
             }
 
             Debug.Assert(trainData.Count + testData.Count == comments.Count);
-
-            return true;
         }
 
-        public int Count(Label label)
+        public int CountByLabel(Label label)
         {
             return comments.Where(c => c.Label == label).Count();
         }

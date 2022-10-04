@@ -85,11 +85,11 @@ namespace SentimentAnalysis
                 distancePriorityQueue.Enqueue(comment, distance);
             }
 
-            const int NUM_NEAREST_NEIGHBORS = 3;
-            Debug.Assert(NUM_NEAREST_NEIGHBORS % 2 == 1, "K값은 홀수여야 합니다.");
+            const int K = 3;
+            Debug.Assert(K % 2 == 1, "K값은 홀수여야 합니다.");
 
             int numPositiveComments = 0;
-            for (int i = 0; i < NUM_NEAREST_NEIGHBORS; i++)
+            for (int i = 0; i < K; i++)
             {
                 if (distancePriorityQueue.Dequeue().Label == Label.POSITIVE)
                 {
@@ -97,7 +97,7 @@ namespace SentimentAnalysis
                 }
             }
 
-            return numPositiveComments > NUM_NEAREST_NEIGHBORS / 2 ? Label.POSITIVE : Label.NEAGTIVE;
+            return numPositiveComments > K / 2 ? Label.POSITIVE : Label.NEAGTIVE;
         }
     }
 }
