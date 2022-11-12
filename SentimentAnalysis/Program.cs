@@ -1,7 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
 
 namespace SentimentAnalysis
 {
@@ -10,12 +7,12 @@ namespace SentimentAnalysis
 
         public static void Main()
         {
-            Stopwatch stopwatch = new();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
 
             Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
-            CommentRepository repository = new();
+            var repository = new CommentRepository();
 
 
             Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
