@@ -6,7 +6,7 @@
 
         public ScoreModel()
         {
-            polarityScores = DataLoader.LoadPolarityScoresFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "polarity_scores.csv"));
+            polarityScores = DataLoader.LoadPolarityScores();
         }
 
         public override Label Predict(Comment x)
@@ -16,7 +16,7 @@
             foreach (string word in x.Words)
             {
                 int frequency = x.GetFrequency(word);
-                
+
                 sumFrequency += frequency;
                 sumScoreFrequencyProduct += polarityScores.GetValueOrDefault(word, 0) * frequency;
             }

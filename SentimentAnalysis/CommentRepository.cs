@@ -6,12 +6,12 @@ namespace SentimentAnalysis
     {
         private readonly List<Comment> comments;
 
-        public CommentRepository(string path)
+        public CommentRepository()
         {
             Random random = new();
 
             // load commments and shuffle
-            comments = DataLoader.LoadCommentsFromCsvFile(path)
+            comments = DataLoader.LoadCommentsFromCsvFile()
                                  .OrderBy(_ => random.Next())
                                  .ToList();
 

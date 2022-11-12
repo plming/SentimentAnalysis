@@ -4,9 +4,9 @@ namespace SentimentAnalysis
 {
     public static class Tokenizer
     {
-        private static readonly HashSet<string> noun = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "nouns.csv"));
-        private static readonly HashSet<string> postPosition = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "post_positions.csv"));
-        private static readonly HashSet<string> ending = DataLoader.LoadWordsFromCsvFile(Path.Combine(DataLoader.DATA_DIR_PATH, "endings.csv"));
+        private static readonly HashSet<string> noun = DataLoader.LoadNouns();
+        private static readonly HashSet<string> postPosition = DataLoader.LoadPostPositions();
+        private static readonly HashSet<string> ending = DataLoader.LoadEndings();
 
         public static List<string> ExtractNouns(string word)
         {

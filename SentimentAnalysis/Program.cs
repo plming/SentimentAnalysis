@@ -1,18 +1,28 @@
 ﻿using System.Diagnostics;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 
 namespace SentimentAnalysis
 {
     public class Program
     {
+
         public static void Main()
         {
             Stopwatch stopwatch = new();
             stopwatch.Start();
 
-            CommentRepository repository = new(Path.Combine(DataLoader.DATA_DIR_PATH, "comments.csv"));
 
+            Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
+            CommentRepository repository = new();
+
+
+            Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
             repository.Split(ratio: 0.7, out var trainDataSet, out var testDataSet);
 
+
+            Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
             Model[] models = { new KnnModel(trainDataSet), new ScoreModel() };
             foreach (Model model in models)
             {
@@ -28,6 +38,8 @@ namespace SentimentAnalysis
                     }
                 }
 
+
+                Console.WriteLine($"수행 시간: {stopwatch.Elapsed}");
                 Console.WriteLine($"[{model.GetType().Name}] 정확도(%): {(double)numMatched / testDataSet.Count * 100}");
             }
 

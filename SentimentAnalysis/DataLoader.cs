@@ -2,15 +2,22 @@
 using CsvHelper.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 
 namespace SentimentAnalysis
 {
     public static class DataLoader
     {
-        public static string DATA_DIR_PATH { get; } = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "data");
+        public static readonly string DATA_DIRECTORY = "data";
 
-        public static List<Comment> LoadCommentsFromCsvFile(string path)
+        public static List<Comment> LoadCommentsFromCsvFile()
         {
+            /*
+             * TODO: 현재 System.Text.Json이 이모지 코드포인트를 지원하지 않음.
+             * 추후 지원될 경우 csv 의존성 제거하기
+             */
             CsvConfiguration config = new(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = false
@@ -18,7 +25,7 @@ namespace SentimentAnalysis
 
             List<Comment> comments = new();
 
-            using (StreamReader reader = new(path))
+            using (StreamReader reader = new(Path.Combine(DATA_DIRECTORY, "comments.csv")))
             using (CsvReader csv = new(reader, config))
             {
                 while (csv.Read())
@@ -50,45 +57,40 @@ namespace SentimentAnalysis
             return comments;
         }
 
-        public static HashSet<string> LoadWordsFromCsvFile(string path)
+        public static HashSet<string> LoadNouns()
         {
-            HashSet<string> words = new();
-
-            foreach (string line in File.ReadLines(path))
-            {
-                const string BLANK = " ";
-                Debug.Assert(line.Split(BLANK).Length == 1, "한 줄에 여러 단어가 존재합니다.");
-                Debug.Assert(!words.Contains(line), "파일에 중복된 단어가 존재합니다.");
-
-                words.Add(line);
-            }
-
-            return words;
+            return loadWordsFromJson("nouns.json");
         }
 
-        public static Dictionary<string, int> LoadPolarityScoresFromCsvFile(string path)
+        public static HashSet<string> LoadPostPositions()
         {
-            Dictionary<string, int> polarityScores = new();
+            return loadWordsFromJson("post_positions.json");
+        }
 
-            foreach (string line in File.ReadLines(path))
-            {
-                string[] splits = line.Split(',');
-                Debug.Assert(splits.Length == 2, "컬럼 갯수가 맞지 않습니다.");
+        public static HashSet<string> LoadEndings()
+        {
+            return loadWordsFromJson("endings.json");
+        }
 
-                string word = splits[0].Trim();
-                Debug.Assert(word == splits[0], "단어에 공백이 포함되어 있습니다");
+        public static Dictionary<string, int> LoadPolarityScores()
+        {
+            string path = Path.Combine(DATA_DIRECTORY, "polarity_scores.json");
+            string json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<Dictionary<string, int>>(json, options);
+        }
 
-                bool isInteger = int.TryParse(splits[1], out int score);
-                Debug.Assert(isInteger);
+        private static readonly JsonSerializerOptions options = new()
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+            WriteIndented = true
+        };
 
-                const int BEST_SCORE = 5;
-                const int WORST_SCORE = 1;
-                Debug.Assert(score >= WORST_SCORE && score <= BEST_SCORE, "유효한 점수 범위를 벗어납니다.");
+        private static HashSet<string> loadWordsFromJson(string fileName)
+        {
+            string json = File.ReadAllText(Path.Combine(DATA_DIRECTORY, fileName));
+            var words = JsonSerializer.Deserialize<List<string>>(json, options);
 
-                polarityScores.Add(word, score);
-            }
-
-            return polarityScores;
+            return new HashSet<string>(words);
         }
     }
 }

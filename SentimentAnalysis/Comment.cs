@@ -2,9 +2,9 @@
 {
     public class Comment
     {
+        public Label Label { get; private set; }
         public string Text { get; private set; }
 
-        public Label Label { get; private set; }
 
         public HashSet<string> Words
         {
